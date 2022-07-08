@@ -77,6 +77,10 @@ function settingDiceImg(diceval) {
 function clearGameboard() {
   playerOne.classList.add('player--active');
   playerTwo.classList.remove('player--active');
+  playerOne.classList.remove('player--winner');
+  playerOne.classList.remove('name');
+  playerTwo.classList.remove('player--winner');
+  playerTwo.classList.remove('name');
   p2CurrentScore.textContent = 0;
   p1CurrentScore.textContent = 0;
   p1TotalScore.textContent = 0;
@@ -104,13 +108,15 @@ rollDice.addEventListener('click', function () {
       Currentscore = 0;
     }
     p1CurrentScore.textContent = Currentscore;
-  } else {
+  } else if (playerTwo.classList.contains('player--active')) {
     Currentscore += addingScore(diceNum);
     if (addingScore(diceNum) == 0) {
       switchToPlayerOne();
       Currentscore = 0;
     }
     p2CurrentScore.textContent = Currentscore;
+  } else {
+    diceImg.style.display = 'none';
   }
 });
 
@@ -120,18 +126,22 @@ hold.addEventListener('click', function () {
     switchToPlayerTwo();
     p1CurrentScore.textContent = 0;
     Currentscore = 0;
-  } else {
+  } else if (playerTwo.classList.contains('player--active')) {
     p2TotalScore.textContent = Currentscore + Number(p2TotalScore.textContent);
     switchToPlayerOne();
     p2CurrentScore.textContent = 0;
     Currentscore = 0;
   }
-  if (p1TotalScore.textContent >= 100) {
-    alert('Player 1 wins');
-    clearGameboard();
-  } else if (p2TotalScore.textContent >= 100) {
-    alert('player 2 wins');
-    clearGameboard();
+  if (p1TotalScore.textContent >= 75) {
+    playerOne.classList.add('player--winner');
+    playerOne.classList.add('name');
+    playerOne.classList.remove('player--active');
+    playerTwo.classList.remove('player--active');
+    diceImg.style.display = 'none';
+  } else if (p2TotalScore.textContent >= 75) {
+    playerOne.classList.add('player--winner');
+    playerOne.classList.add('name');
+    diceImg.style.display = 'none';
   }
 });
 
