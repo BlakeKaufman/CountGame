@@ -23,10 +23,9 @@ const playerTwo = document.querySelector('.player--1');
 
 // setting up score
 let Currentscore = 0;
-let score = 0;
-
 // functions
 function addingScore(diceval) {
+  let score = 0;
   switch (diceval) {
     case 1:
       score *= 0;
@@ -51,6 +50,7 @@ function addingScore(diceval) {
 }
 
 function settingDiceImg(diceval) {
+  diceImg.style.display = 'block';
   let newDiceImage = '';
   switch (diceval) {
     case 1:
@@ -83,7 +83,6 @@ function clearGameboard() {
   p2TotalScore.textContent = 0;
   diceImg.style.display = 'none';
   Currentscore = 0;
-  score = 0;
 }
 
 function switchToPlayerOne() {
@@ -97,18 +96,19 @@ function switchToPlayerTwo() {
 
 rollDice.addEventListener('click', function () {
   const diceNum = Math.trunc(Math.random() * 6) + 1;
-  diceImg.style.display = 'block';
   diceImg.src = settingDiceImg(diceNum);
   if (playerOne.classList.contains('player--active')) {
-    Currentscore = addingScore(diceNum);
-    if (Currentscore == 0) {
+    Currentscore += addingScore(diceNum);
+    if (addingScore(diceNum) == 0) {
       switchToPlayerTwo();
+      Currentscore = 0;
     }
     p1CurrentScore.textContent = Currentscore;
   } else {
-    Currentscore = addingScore(diceNum);
-    if (Currentscore == 0) {
+    Currentscore += addingScore(diceNum);
+    if (addingScore(diceNum) == 0) {
       switchToPlayerOne();
+      Currentscore = 0;
     }
     p2CurrentScore.textContent = Currentscore;
   }
@@ -120,18 +120,16 @@ hold.addEventListener('click', function () {
     switchToPlayerTwo();
     p1CurrentScore.textContent = 0;
     Currentscore = 0;
-    score = 0;
   } else {
     p2TotalScore.textContent = Currentscore + Number(p2TotalScore.textContent);
     switchToPlayerOne();
     p2CurrentScore.textContent = 0;
     Currentscore = 0;
-    score = 0;
   }
-  if (p1TotalScore.textContent >= 50) {
+  if (p1TotalScore.textContent >= 100) {
     alert('Player 1 wins');
     clearGameboard();
-  } else if (p2TotalScore.textContent >= 50) {
+  } else if (p2TotalScore.textContent >= 100) {
     alert('player 2 wins');
     clearGameboard();
   }
