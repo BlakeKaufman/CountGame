@@ -141,6 +141,8 @@ hold.addEventListener('click', function () {
   } else if (p2TotalScore.textContent >= 75) {
     playerTwo.classList.add('player--winner');
     playerTwo.classList.add('name');
+    playerOne.classList.remove('player--active');
+    playerTwo.classList.remove('player--active');
     diceImg.style.display = 'none';
   }
 });
