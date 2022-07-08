@@ -169,3 +169,36 @@ main {
 .hidden {
   display: none;
 }
+
+@media screen and (max-width: 430px) {
+  body {
+    width: 100vw;
+  }
+  main {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .btn--new {
+    top: 2rem;
+  }
+  .player {
+    width: 50%;
+    height: 100%;
+    flex: 0;
+    padding-top: 9rem;
+    padding-bottom: 3rem;
+  }
+  .name {
+    text-align: center;
+  }
+  .current {
+    width: 150px;
+  }
+  .btn--roll {
+    top: 45rem;
+  }
+  .btn--hold {
+    top: 39rem;
+  }
+}
