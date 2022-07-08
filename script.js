@@ -1,98 +1,140 @@
 'use strict';
+// grabbing buttons
+const newGame = document.querySelector('.btn--new');
+const rollDice = document.querySelector('.btn--roll');
+const hold = document.querySelector('.btn--hold');
 
-// Selecting elements
-const player0El = document.querySelector('.player--0');
-const player1El = document.querySelector('.player--1');
-const score0El = document.querySelector('#score--0');
-const score1El = document.getElementById('score--1');
-const current0El = document.getElementById('current--0');
-const current1El = document.getElementById('current--1');
+// grabbing text
 
-const diceEl = document.querySelector('.dice');
-const btnNew = document.querySelector('.btn--new');
-const btnRoll = document.querySelector('.btn--roll');
-const btnHold = document.querySelector('.btn--hold');
+const p1TotalScore = document.getElementById('score--0');
+const p1CurrentScore = document.getElementById('current--0');
 
-let scores, currentScore, activePlayer, playing;
+const p2TotalScore = document.getElementById('score--1');
+const p2CurrentScore = document.getElementById('current--1');
 
-// Starting conditions
-const init = function () {
-  scores = [0, 0];
-  currentScore = 0;
-  activePlayer = 0;
-  playing = true;
+// dice img
 
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-  current0El.textContent = 0;
-  current1El.textContent = 0;
+const diceImg = document.querySelector('.dice');
 
-  diceEl.classList.add('hidden');
-  player0El.classList.remove('player--winner');
-  player1El.classList.remove('player--winner');
-  player0El.classList.add('player--active');
-  player1El.classList.remove('player--active');
-};
-init();
+// player
+const playerOne = document.querySelector('.player--0');
 
-const switchPlayer = function () {
-  document.getElementById(`current--${activePlayer}`).textContent = 0;
-  currentScore = 0;
-  activePlayer = activePlayer === 0 ? 1 : 0;
-  player0El.classList.toggle('player--active');
-  player1El.classList.toggle('player--active');
-};
+const playerTwo = document.querySelector('.player--1');
 
-// Rolling dice functionality
-btnRoll.addEventListener('click', function () {
-  if (playing) {
-    // 1. Generating a random dice roll
-    const dice = Math.trunc(Math.random() * 6) + 1;
+// setting up score
+let Currentscore = 0;
+let score = 0;
 
-    // 2. Display dice
-    diceEl.classList.remove('hidden');
-    diceEl.src = `dice-${dice}.png`;
+// functions
+function addingScore(diceval) {
+  switch (diceval) {
+    case 1:
+      score *= 0;
+      break;
+    case 2:
+      score += 2;
+      break;
+    case 3:
+      score += 3;
+      break;
+    case 4:
+      score += 4;
+      break;
+    case 5:
+      score += 5;
+      break;
+    case 6:
+      score += 6;
+      break;
+  }
+  return score;
+}
 
-    // 3. Check for rolled 1
-    if (dice !== 1) {
-      // Add dice to current score
-      currentScore += dice;
-      document.getElementById(
-        `current--${activePlayer}`
-      ).textContent = currentScore;
-    } else {
-      // Switch to next player
-      switchPlayer();
+function settingDiceImg(diceval) {
+  let newDiceImage = '';
+  switch (diceval) {
+    case 1:
+      newDiceImage = 'dice-1.png';
+      break;
+    case 2:
+      newDiceImage = 'dice-2.png';
+      break;
+    case 3:
+      newDiceImage = 'dice-3.png';
+      break;
+    case 4:
+      newDiceImage = 'dice-4.png';
+      break;
+    case 5:
+      newDiceImage = 'dice-5.png';
+      break;
+    case 6:
+      newDiceImage = 'dice-6.png';
+      break;
+  }
+  return newDiceImage;
+}
+function clearGameboard() {
+  playerOne.classList.add('player--active');
+  playerTwo.classList.remove('player--active');
+  p2CurrentScore.textContent = 0;
+  p1CurrentScore.textContent = 0;
+  p1TotalScore.textContent = 0;
+  p2TotalScore.textContent = 0;
+  diceImg.style.display = 'none';
+  Currentscore = 0;
+  score = 0;
+}
+
+function switchToPlayerOne() {
+  playerTwo.classList.remove('player--active');
+  playerOne.classList.add('player--active');
+}
+function switchToPlayerTwo() {
+  playerOne.classList.remove('player--active');
+  playerTwo.classList.add('player--active');
+}
+
+rollDice.addEventListener('click', function () {
+  const diceNum = Math.trunc(Math.random() * 6) + 1;
+  diceImg.style.display = 'block';
+  diceImg.src = settingDiceImg(diceNum);
+  if (playerOne.classList.contains('player--active')) {
+    Currentscore = addingScore(diceNum);
+    if (Currentscore == 0) {
+      switchToPlayerTwo();
     }
+    p1CurrentScore.textContent = Currentscore;
+  } else {
+    Currentscore = addingScore(diceNum);
+    if (Currentscore == 0) {
+      switchToPlayerOne();
+    }
+    p2CurrentScore.textContent = Currentscore;
   }
 });
 
-btnHold.addEventListener('click', function () {
-  if (playing) {
-    // 1. Add current score to active player's score
-    scores[activePlayer] += currentScore;
-    // scores[1] = scores[1] + currentScore
-
-    document.getElementById(`score--${activePlayer}`).textContent =
-      scores[activePlayer];
-
-    // 2. Check if player's score is >= 100
-    if (scores[activePlayer] >= 100) {
-      // Finish the game
-      playing = false;
-      diceEl.classList.add('hidden');
-
-      document
-        .querySelector(`.player--${activePlayer}`)
-        .classList.add('player--winner');
-      document
-        .querySelector(`.player--${activePlayer}`)
-        .classList.remove('player--active');
-    } else {
-      // Switch to the next player
-      switchPlayer();
-    }
+hold.addEventListener('click', function () {
+  if (playerOne.classList.contains('player--active')) {
+    p1TotalScore.textContent = Currentscore + Number(p1TotalScore.textContent);
+    switchToPlayerTwo();
+    p1CurrentScore.textContent = 0;
+    Currentscore = 0;
+    score = 0;
+  } else {
+    p2TotalScore.textContent = Currentscore + Number(p2TotalScore.textContent);
+    switchToPlayerOne();
+    p2CurrentScore.textContent = 0;
+    Currentscore = 0;
+    score = 0;
+  }
+  if (p1TotalScore.textContent >= 50) {
+    alert('Player 1 wins');
+    clearGameboard();
+  } else if (p2TotalScore.textContent >= 50) {
+    alert('player 2 wins');
+    clearGameboard();
   }
 });
 
-btnNew.addEventListener('click', init);
+newGame.addEventListener('click', clearGameboard);
