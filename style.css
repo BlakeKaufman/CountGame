@@ -165,12 +165,7 @@ main {
   font-weight: 700;
   color: #c7365f;
 }
-
-.hidden {
-  display: none;
-}
-
-@media screen and (max-width: 430px) {
+@media screen and (max-width: 650px) {
   body {
     width: 100vw;
   }
